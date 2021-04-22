@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+	<div id="id01"></div>
+	<script>
+		// prendo parametri GET
+		getParameter = (key) => {
+			address = window.location.search // Address of the current window
+			parameterList = new URLSearchParams(address) // Returns a URLSearchParams object instance
+
+		return parameterList.get(key) // Returning the respected value associated with the provided key
+		}
+
+		var xmlhttp = new XMLHttpRequest();
+		var url = "artistdata.json";
+
+		xmlhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				var myArr = JSON.parse(this.responseText);
+					myFunction(myArr);
+			}
+		};
+		xmlhttp.open("GET", url);
+		xmlhttp.send();
+
+		function myFunction(arr) {
+			var node;
+			nome = document.createElement("h2");
+			foto = document.createElement("img")
+			bio = document.createElement("p");
+
+			spotify = document.createElement("iframe")
+			element = document.getElementById("id01");
+
+			for(let i = 0; i < arr.length; i++){
+				if(arr[i].artista===getParameter("artista")){ //uguaglianza con parametro passato in get
+					console.log(arr[i].foto)
+					node = document.createTextNode(arr[i].artista);
+					nome.appendChild(node)
+					element.appendChild(nome)
+
+					foto.src = arr[i].foto
+					element.appendChild(foto)
+
+					if(arr[i].video){
+						yt = document.createElement("iframe")
+						yt.src = arr[i].video
+						element.appendChild(yt)
+					}
+
+					spotify.src = arr[i].spotify_embed
+					element.appendChild(spotify)
+
+					node = document.createTextNode(arr[i].bio)
+					bio.appendChild(node)
+					element.appendChild(bio)
+				}
+			}
+
+		}
+	</script>
+</body>
+</html>
